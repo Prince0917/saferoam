@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeRoam</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --teal:#0F6E56;--teal-lt:#E1F5EE;--teal-mid:#1D9E75;
+  --purple:#534AB7;--purple-lt:#EEEDFE;
+  --amber:#BA7517;--amber-lt:#FAEEDA;
+  --coral:#993C1D;--coral-lt:#FAECE7;
+  --red:#C0392B;
+  --gray:#2C2C2A;--gray-mid:#5F5E5A;--gray-lt:#F1EFE8;
+  --white:#fff;
+}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#1a1a1a;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.phone{
+  width:390px;
+  min-height:780px;
+  background:var(--white);
+  border-radius:44px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 40px 80px rgba(0,0,0,0.5);
+}
+.screen{display:none;flex-direction:column;min-height:780px}
+.screen.active{display:flex}
+
+/* ── SCREEN 1 — SPLASH ── */
+#splash{background:var(--teal);align-items:center;justify-content:center;padding:40px}
+.splash-logo{font-family:'DM Serif Display',serif;font-size:52px;color:var(--white);margin-bottom:8px;text-align:center}
+.splash-sub{font-size:15px;color:#9FE1CB;text-align:center;margin-bottom:60px}
+.splash-tagline{font-size:13px;color:#5DCAA5;text-align:center;font-style:italic;margin-bottom:48px}
+.btn-primary{
+  background:var(--white);color:var(--teal);
+  border:none;border-radius:14px;padding:16px 32px;
+  font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;
+  cursor:pointer;width:100%;margin-bottom:12px;
+  transition:opacity .15s;
+}
+.btn-primary:hover{opacity:.9}
+.btn-ghost{
+  background:transparent;color:var(--white);
+  border:1.5px solid rgba(255,255,255,0.4);border-radius:14px;padding:15px 32px;
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;
+  cursor:pointer;width:100%;
+  transition:background .15s;
+}
+.btn-ghost:hover{background:rgba(255,255,255,0.1)}
+
+/* ── SCREEN 2 — PROFILE ── */
+#profile{background:var(--white)}
+.screen-header{
+  background:var(--teal);padding:52px 24px 24px;
+  color:var(--white);
+}
+.screen-header h2{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px}
+.screen-header p{font-size:13px;color:#9FE1CB}
+.screen-body{padding:20px 24px;flex:1;overflow-y:auto}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--gray-mid);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.field input,.field select{
+  width:100%;padding:13px 14px;border:1.5px solid #E0E0E0;border-radius:12px;
+  font-family:'DM Sans',sans-serif;font-size:15px;color:var(--gray);
+  background:var(--white);outline:none;transition:border .15s;
+}
+.field input:focus,.field select:focus{border-color:var(--teal)}
+.chip-row{display:flex;gap:8px;flex-wrap:wrap}
+.chip{
+  padding:8px 14px;border-radius:20px;border:1.5px solid #E0E0E0;
+  font-size:13px;color:var(--gray-mid);cursor:pointer;transition:all .15s;
+  background:var(--white);
+}
+.chip.selected{background:var(--teal-lt);border-color:var(--teal);color:var(--teal);font-weight:600}
+.slider-wrap{display:flex;align-items:center;gap:10px}
+.slider-wrap input[type=range]{flex:1;accent-color:var(--teal)}
+.slider-label{font-size:12px;color:var(--gray-mid);min-width:60px;text-align:right}
+.btn-action{
+  background:var(--teal);color:var(--white);border:none;border-radius:14px;
+  padding:16px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;
+  cursor:pointer;width:100%;margin-top:8px;transition:opacity .15s;
+}
+.btn-action:hover{opacity:.9}
+.btn-action:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── SCREEN 3 — BRIEFING ── */
+#briefing{background:#F8F8F6}
+.briefing-header{background:var(--teal);padding:52px 24px 28px;color:var(--white)}
+.briefing-header .dest{font-size:13px;color:#9FE1CB;margin-bottom:4px}
+.briefing-header h2{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px}
+.briefing-header .user-pill{
+  display:inline-block;background:rgba(255,255,255,0.15);
+  border-radius:20px;padding:4px 12px;font-size:12px;color:var(--white);margin-top:6px;
+}
+.cards-area{padding:16px 20px;flex:1;overflow-y:auto}
+.info-card{
+  background:var(--white);border-radius:16px;padding:16px;margin-bottom:12px;
+  border-left:4px solid var(--teal);
+}
+.info-card.purple{border-color:var(--purple)}
+.info-card.amber{border-color:var(--amber)}
+.info-card.coral{border-color:var(--coral)}
+.info-card.red{border-color:var(--red)}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--teal);margin-bottom:8px}
+.info-card.purple .card-title{color:var(--purple)}
+.info-card.amber .card-title{color:var(--amber)}
+.info-card.coral .card-title{color:var(--coral)}
+.info-card.red .card-title{color:var(--red)}
+.card-content{font-size:14px;color:var(--gray);line-height:1.6}
+.card-content ul{padding-left:16px}
+.card-content li{margin-bottom:4px}
+.loading-card{
+  background:var(--white);border-radius:16px;padding:20px;margin-bottom:12px;
+  display:flex;align-items:center;gap:12px;
+}
+.spinner{
+  width:20px;height:20px;border:2px solid var(--teal-lt);border-top-color:var(--teal);
+  border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.nav-row{display:flex;gap:8px;padding:12px 20px 20px}
+.btn-nav{
+  flex:1;padding:14px;border-radius:12px;font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:600;cursor:pointer;border:none;transition:opacity .15s;
+}
+.btn-nav.teal{background:var(--teal);color:var(--white)}
+.btn-nav.red{background:var(--red);color:var(--white)}
+.btn-nav:hover{opacity:.9}
+
+/* ── SCREEN 4 — COMPANION ── */
+#companion{background:var(--white)}
+.comp-header{background:var(--purple);padding:52px 24px 24px;color:var(--white)}
+.comp-header h2{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:4px}
+.comp-header p{font-size:13px;color:#AFA9EC}
+.comp-body{padding:20px 24px;flex:1}
+.mood-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.mood-btn{
+  padding:14px 10px;border-radius:14px;border:1.5px solid #E0E0E0;
+  background:var(--white);cursor:pointer;text-align:center;transition:all .15s;
+  font-family:'DM Sans',sans-serif;
+}
+.mood-btn:hover{border-color:var(--purple);background:var(--purple-lt)}
+.mood-btn.selected{border-color:var(--purple);background:var(--purple-lt)}
+.mood-icon{font-size:22px;display:block;margin-bottom:4px}
+.mood-label{font-size:13px;color:var(--gray);font-weight:500}
+.mood-result{
+  background:var(--purple-lt);border-radius:16px;padding:16px;margin-bottom:16px;
+  border-left:4px solid var(--purple);display:none;
+}
+.mood-result.show{display:block}
+.mood-result-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--purple);margin-bottom:6px}
+.mood-result-text{font-size:14px;color:var(--gray);line-height:1.6}
+.disrupt-btn{
+  background:var(--amber-lt);border:1.5px solid var(--amber);border-radius:14px;
+  padding:14px;width:100%;font-family:'DM Sans',sans-serif;font-size:14px;
+  font-weight:600;color:var(--amber);cursor:pointer;text-align:left;margin-bottom:10px;
+  transition:background .15s;
+}
+.disrupt-btn:hover{background:#FAEEDA}
+.disrupt-result{
+  background:var(--amber-lt);border-radius:16px;padding:16px;margin-bottom:16px;
+  border-left:4px solid var(--amber);display:none;
+}
+.disrupt-result.show{display:block}
+.disrupt-result-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--amber);margin-bottom:6px}
+.disrupt-result-text{font-size:14px;color:var(--gray);line-height:1.6}
+.disrupt-result-text ol{padding-left:16px}
+.disrupt-result-text li{margin-bottom:4px}
+
+/* ── SCREEN 5 — EMERGENCY ── */
+#emergency{background:var(--white)}
+.emg-header{background:var(--red);padding:52px 24px 24px;color:var(--white)}
+.emg-header h2{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px}
+.emg-header p{font-size:13px;color:rgba(255,255,255,0.7)}
+.emg-body{padding:16px 20px;flex:1}
+.emg-card{
+  background:var(--white);border-radius:16px;padding:16px;margin-bottom:12px;
+  border:1.5px solid #E0E0E0;
+}
+.emg-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--red);margin-bottom:8px}
+.emg-card-main{font-size:16px;font-weight:600;color:var(--gray);margin-bottom:4px}
+.emg-card-sub{font-size:13px;color:var(--gray-mid);line-height:1.5}
+.emg-call-btn{
+  display:block;width:100%;padding:12px;background:#FFF0F0;border:none;border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--red);
+  cursor:pointer;margin-top:8px;text-align:center;transition:background .15s;
+}
+.emg-call-btn:hover{background:#FFE0E0}
+.sos-card{
+  background:var(--red);border-radius:16px;padding:16px;margin-bottom:12px;color:var(--white);
+}
+.sos-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:rgba(255,255,255,0.7);margin-bottom:8px}
+.sos-text{font-size:14px;line-height:1.6;font-style:italic}
+.back-btn{
+  background:var(--gray-lt);border:none;border-radius:14px;padding:14px;
+  width:100%;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;
+  color:var(--gray);cursor:pointer;margin-top:4px;transition:background .15s;
+}
+.back-btn:hover{background:#E0E0DA}
+
+/* dest specific data */
+.dest-info{}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<!-- SCREEN 1: SPLASH -->
+<div id="splash" class="screen active">
+  <div style="font-family:'DM Serif Display',serif;font-size:56px;color:#fff;text-align:center;margin-bottom:6px;padding-top:0">SafeRoam</div>
+  <div style="font-size:14px;color:#9FE1CB;text-align:center;margin-bottom:10px">AI Travel Companion</div>
+  <div style="font-size:12px;color:#5DCAA5;text-align:center;font-style:italic;margin-bottom:50px">"Travel Smart. Travel Safe. Travel Confident."</div>
+  <div style="background:rgba(255,255,255,0.1);border-radius:20px;padding:20px;margin-bottom:40px;text-align:center">
+    <div style="font-size:13px;color:#E1F5EE;line-height:1.7">Built for first-time solo Indian travellers.<br>Get personalised safety briefings,<br>real-time guidance and instant emergency help.</div>
+  </div>
+  <button class="btn-primary" onclick="go('profile')">Get Started</button>
+  <button class="btn-ghost" onclick="go('companion')">I am already traveling</button>
+</div>
+
+<!-- SCREEN 2: PROFILE SETUP -->
+<div id="profile" class="screen">
+  <div class="screen-header">
+    <h2>Tell us about you</h2>
+    <p>We will build your personalised safety briefing</p>
+  </div>
+  <div class="screen-body">
+    <div class="field">
+      <label>Destination City</label>
+      <select id="dest">
+        <option value="">Select a destination...</option>
+        <option value="Bangkok">Bangkok, Thailand</option>
+        <option value="Dubai">Dubai, UAE</option>
+        <option value="Goa">Goa, India</option>
+        <option value="Singapore">Singapore</option>
+        <option value="London">London, UK</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Your Name</label>
+      <input type="text" id="uname" placeholder="e.g. Priya">
+    </div>
+    <div class="field">
+      <label>Trip Purpose</label>
+      <div class="chip-row" id="purpose-chips">
+        <div class="chip" onclick="selectChip('purpose',this,'Studies')">Studies</div>
+        <div class="chip" onclick="selectChip('purpose',this,'Work')">Work</div>
+        <div class="chip" onclick="selectChip('purpose',this,'Leisure')">Leisure</div>
+        <div class="chip" onclick="selectChip('purpose',this,'Backpacking')">Backpacking</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>What do you eat?</label>
+      <div class="chip-row" id="food-chips">
+        <div class="chip" onclick="selectChip('food',this,'Vegetarian')">Vegetarian</div>
+        <div class="chip" onclick="selectChip('food',this,'Non-Veg')">Non-Veg</div>
+        <div class="chip" onclick="selectChip('food',this,'Vegan')">Vegan</div>
+        <div class="chip" onclick="selectChip('food',this,'Halal')">Halal</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>First time to this destination?</label>
+      <div class="chip-row" id="first-chips">
+        <div class="chip" onclick="selectChip('first',this,'Yes')">Yes, first time</div>
+        <div class="chip" onclick="selectChip('first',this,'No')">Been here before</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>How confident are you feeling?</label>
+      <div class="slider-wrap">
+        <span style="font-size:12px;color:#999">Nervous</span>
+        <input type="range" min="1" max="5" value="3" id="conf-slider" oninput="updateConf(this.value)">
+        <span class="slider-label" id="conf-label">Neutral</span>
+      </div>
+    </div>
+    <button class="btn-action" id="generate-btn" onclick="generateBriefing()">Generate My Safety Briefing</button>
+    <button class="back-btn" style="margin-top:8px" onclick="go('splash')">Back</button>
+  </div>
+</div>
+
+<!-- SCREEN 3: BRIEFING CARD -->
+<div id="briefing" class="screen">
+  <div class="briefing-header">
+    <div class="dest" id="brief-dest">Destination</div>
+    <h2 id="brief-title">Your Safety Briefing</h2>
+    <div class="user-pill" id="brief-pill">Solo Traveller</div>
+  </div>
+  <div class="cards-area" id="cards-area">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <div style="font-size:14px;color:#888">Generating your personalised briefing...</div>
+    </div>
+  </div>
+  <div class="nav-row">
+    <button class="btn-nav teal" onclick="go('companion')">Real-Time Companion</button>
+    <button class="btn-nav red" onclick="go('emergency')">Emergency</button>
+  </div>
+</div>
+
+<!-- SCREEN 4: COMPANION -->
+<div id="companion" class="screen">
+  <div class="comp-header">
+    <h2>Real-Time Companion</h2>
+    <p id="comp-sub">How are you feeling right now?</p>
+  </div>
+  <div class="comp-body">
+    <div class="mood-grid">
+      <div class="mood-btn" onclick="setMood(this,'Confident','You are in great headspace. Explore freely — check out a local market or street food spot nearby. You deserve to enjoy this.')">
+        <span class="mood-icon">&#128512;</span>
+        <span class="mood-label">Confident</span>
+      </div>
+      <div class="mood-btn" onclick="setMood(this,'Anxious','It is completely normal to feel anxious. Stay in well-lit, busy areas. Find a cafe, sit down, and give yourself 10 minutes. You are safe.')">
+        <span class="mood-icon">&#128555;</span>
+        <span class="mood-label">Anxious</span>
+      </div>
+      <div class="mood-btn" onclick="setMood(this,'Lost','Do not panic. Open Google Maps and search your hotel name. If you cannot connect, show your hotel address card (in Emergency screen) to any shopkeeper and ask for help.')">
+        <span class="mood-icon">&#128533;</span>
+        <span class="mood-label">Lost</span>
+      </div>
+      <div class="mood-btn" onclick="setMood(this,'Excited','Perfect energy for exploring! This is what travel is about. Try one thing you would never do at home — a local dish, a street market, a scenic walk.')">
+        <span class="mood-icon">&#127881;</span>
+        <span class="mood-label">Excited</span>
+      </div>
+      <div class="mood-btn" onclick="setMood(this,'Tired','You need rest. Head back to your accommodation. Do not push yourself — a rested traveller is a safe traveller. Tomorrow will be better.')">
+        <span class="mood-icon">&#128564;</span>
+        <span class="mood-label">Tired</span>
+      </div>
+      <div class="mood-btn" onclick="setMood(this,'Unsafe','Trust your instincts. Move immediately to a public place — a hotel lobby, a shop, or a busy street. Call the local emergency number from your briefing card right now.')">
+        <span class="mood-icon">&#128680;</span>
+        <span class="mood-label">Unsafe</span>
+      </div>
+    </div>
+    <div class="mood-result" id="mood-result">
+      <div class="mood-result-title" id="mood-result-title">Advice for you</div>
+      <div class="mood-result-text" id="mood-result-text"></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#888;margin-bottom:10px">Something went wrong?</div>
+    <button class="disrupt-btn" onclick="showDisrupt('missed')">&#9993; My transport got cancelled or delayed</button>
+    <button class="disrupt-btn" onclick="showDisrupt('scam')">&#9888; I think I was scammed</button>
+    <button class="disrupt-btn" onclick="showDisrupt('lost-item')">&#128269; I lost my wallet or passport</button>
+    <div class="disrupt-result" id="disrupt-result">
+      <div class="disrupt-result-title" id="disrupt-result-title">Step-by-step action plan</div>
+      <div class="disrupt-result-text" id="disrupt-result-text"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn-nav teal btn-nav" style="flex:1;padding:12px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;border:none;cursor:pointer;background:#0F6E56;color:#fff" onclick="go('briefing')">My Briefing</button>
+      <button class="btn-nav red btn-nav" style="flex:1;padding:12px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;border:none;cursor:pointer;background:#C0392B;color:#fff" onclick="go('emergency')">Emergency</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 5: EMERGENCY -->
+<div id="emergency" class="screen">
+  <div class="emg-header">
+    <h2>Emergency Help</h2>
+    <p id="emg-dest-label">Always accessible — one tap away</p>
+  </div>
+  <div class="emg-body">
+    <div class="emg-card">
+      <div class="emg-card-title">Police Emergency</div>
+      <div class="emg-card-main" id="emg-police">100 (India) / 191 (International)</div>
+      <div class="emg-card-sub">Call immediately if you feel threatened or witness a crime</div>
+      <button class="emg-call-btn">Call Police</button>
+    </div>
+    <div class="emg-card">
+      <div class="emg-card-title">Nearest Hospital</div>
+      <div class="emg-card-main" id="emg-hospital">Search "hospital near me" on Google Maps</div>
+      <div class="emg-card-sub">Show your health insurance card. Ask for English-speaking staff.</div>
+      <button class="emg-call-btn">Find Hospital</button>
+    </div>
+    <div class="emg-card">
+      <div class="emg-card-title">Indian Embassy / Consulate</div>
+      <div class="emg-card-main" id="emg-embassy">Embassy of India</div>
+      <div class="emg-card-sub" id="emg-embassy-sub">Contact for lost passport, legal help, or emergency repatriation</div>
+      <button class="emg-call-btn">Call Embassy</button>
+    </div>
+    <div class="emg-card">
+      <div class="emg-card-title">Your Hotel Address (show to cab driver)</div>
+      <div class="emg-card-main" id="emg-hotel">Enter your hotel name</div>
+      <div class="emg-card-sub" id="emg-hotel-local" style="font-style:italic;margin-top:4px"></div>
+    </div>
+    <div class="sos-card" id="sos-card">
+      <div class="sos-card-title">SOS Message (copy and send)</div>
+      <div class="sos-text" id="sos-text">I am an Indian traveller and I need help. Please assist me or call emergency services. My name is [your name].</div>
+    </div>
+    <button class="back-btn" onclick="go('companion')">Back to Companion</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const state = {
+  dest:'', name:'', purpose:'', food:'', first:'', conf:3
+};
+
+const destData = {
+  Bangkok:{
+    police:'191',
+    hospital:'Bumrungrad International Hospital — +66 2 066 8888',
+    embassy:'Royal Thai Embassy — Indian Embassy Bangkok: +66 2 258 0300',
+    embassySub:'Located at 46 Prasarnmit, Sukhumvit 23, Bangkok',
+    hotelLocal:'โปรดพาฉันไปที่โรงแรม [hotel name] ขอบคุณ',
+    sosmsg:'ฉันเป็นนักท่องเที่ยวชาวอินเดียและต้องการความช่วยเหลือ กรุณาโทร 191',
+    cards:[
+      {color:'teal',title:'Currency & Money',content:'<ul><li>Currency: Thai Baht (THB). 1 INR = approx 0.43 THB.</li><li>ATMs are everywhere — use those inside malls for safety.</li><li>Tipping is appreciated but not mandatory. 20-50 THB for good service.</li><li>Always carry small notes — many street vendors do not give change.</li></ul>'},
+      {color:'purple',title:'Cultural Rules to Know',content:'<ul><li>Never touch anyone\'s head — it is considered sacred in Thai culture.</li><li>Dress modestly at temples — cover shoulders and knees. Scarves are available at entrances.</li><li>Do not point your feet at people or religious images — it is highly offensive.</li><li>The Thai monarchy is deeply respected — never make jokes about the royal family.</li></ul>'},
+      {color:'amber',title:'Food Safety for You',content:'<ul><li>Vegetarian food is available but always confirm — "Jay" means vegan/vegetarian in Thai.</li><li>Avoid street food from unhygienic stalls — look for busy stalls with fresh cooking.</li><li>Stick to bottled or purified water — do not drink tap water.</li><li>Pad Thai, Som Tum (papaya salad), and mango sticky rice are generally safe vegetarian options.</li></ul>'},
+      {color:'coral',title:'Top Scams to Avoid',content:'<ul><li><b>Tuk-tuk scam:</b> Driver says your destination is "closed today" and takes you to a gem shop instead. Always book via Grab app.</li><li><b>Gem scam:</b> Friendly stranger offers to take you to a "special sale" — these are always fake gems at huge markups. Politely decline.</li></ul>'},
+    ]
+  },
+  Dubai:{
+    police:'999',
+    hospital:'Mediclinic City Hospital — +971 4 435 9999',
+    embassy:'Consulate General of India, Dubai — +971 4 397 1333',
+    embassySub:'Consulate General of India, Al Hamriya, Dubai',
+    hotelLocal:'من فضلك خذني إلى فندق [hotel name] شكراً',
+    sosmsg:'أنا سائح هندي وأحتاج إلى مساعدة. يرجى الاتصال بـ 999',
+    cards:[
+      {color:'teal',title:'Currency & Money',content:'<ul><li>Currency: UAE Dirham (AED). 1 INR = approx 0.044 AED.</li><li>Cards are accepted almost everywhere — carry minimal cash.</li><li>No tipping is mandatory but 10% is appreciated in restaurants.</li><li>Exchange money at official exchange counters — never with street individuals.</li></ul>'},
+      {color:'purple',title:'Cultural Rules to Know',content:'<ul><li>Dress modestly in public — no shorts or sleeveless tops outside tourist areas and beaches.</li><li>Public displays of affection are illegal — even hand holding can attract attention.</li><li>Ramadan hours change everything — eating and drinking in public during day hours is prohibited.</li><li>Friday is the holy day — many businesses open late or stay closed until afternoon.</li></ul>'},
+      {color:'amber',title:'Food Safety for You',content:'<ul><li>Dubai has excellent vegetarian and Indian food options — look for "Pure Veg" restaurants.</li><li>Halal food is available everywhere — all meat served is halal by law.</li><li>Water is safe to drink but bottled water is widely preferred.</li><li>Bur Dubai area has a large Indian food district — very safe and familiar options.</li></ul>'},
+      {color:'coral',title:'Top Scams to Avoid',content:'<ul><li><b>Fake taxi:</b> Unofficial taxis overcharge massively. Always use the official RTA Dubai Taxi app or Careem.</li><li><b>Timeshare trap:</b> Friendly people at malls offer "free gifts" or "competitions" — this leads to aggressive timeshare sales pitches. Walk away immediately.</li></ul>'},
+    ]
+  },
+  Goa:{
+    police:'100',
+    hospital:'Goa Medical College Hospital — 0832-245-8700',
+    embassy:'N/A — Domestic travel. Nearest police station is your first contact.',
+    embassySub:'Goa Police Helpline: 100. Tourist Helpline: 1800-233-0130',
+    hotelLocal:'मुझे [hotel name] होटल ले जाइए। धन्यवाद।',
+    sosmsg:'मैं एक पर्यटक हूं और मुझे मदद चाहिए। कृपया 100 पर कॉल करें।',
+    cards:[
+      {color:'teal',title:'Transport & Getting Around',content:'<ul><li>Rent a scooter only if you have a valid driving licence — police checkpoints are common.</li><li>Always wear a helmet — fines are strict and accidents are frequent.</li><li>Use Goa Miles app for official taxis — avoid negotiating with random auto drivers.</li><li>North Goa and South Goa have very different vibes — decide based on your preference.</li></ul>'},
+      {color:'purple',title:'Beach Safety Rules',content:'<ul><li>Only swim at beaches with lifeguards on duty — red flags mean no swimming.</li><li>Be extra careful during monsoon season (June-September) — currents are deadly.</li><li>Do not leave your belongings unattended on the beach — theft is common.</li><li>Be cautious accepting food or drinks from strangers at beach parties.</li></ul>'},
+      {color:'amber',title:'Food Guide',content:'<ul><li>Goa has excellent vegetarian and seafood options — Thali meals are safe and authentic.</li><li>Try: Goan fish curry, bebinca dessert, local coconut water.</li><li>Avoid: seafood from unknown sources during non-peak months.</li><li>Many beach shacks are tourist-priced — ask locals for recommendations instead.</li></ul>'},
+      {color:'coral',title:'Common Scams to Avoid',content:'<ul><li><b>Overpriced taxi:</b> Always agree on the price before getting in any taxi or auto. Use Goa Miles app whenever possible.</li><li><b>Fake tour packages:</b> Strangers offering "special local tours" at low prices often end up cancelling or demanding more money. Book through your hotel or official tourism office only.</li></ul>'},
+    ]
+  },
+  Singapore:{
+    police:'999',
+    hospital:'Singapore General Hospital — +65 6222 3322',
+    embassy:'High Commission of India, Singapore — +65 6737 6777',
+    embassySub:'31 Grange Road, Singapore 239702',
+    hotelLocal:'请送我去 [hotel name] 酒店。谢谢。',
+    sosmsg:'我是印度游客，需要帮助。请拨打999。',
+    cards:[
+      {color:'teal',title:'Currency & Money',content:'<ul><li>Currency: Singapore Dollar (SGD). 1 INR = approx 0.016 SGD.</li><li>Cards accepted almost everywhere — cashless is the norm.</li><li>No tipping culture — service charge is already included in bills.</li><li>Changi Airport has fair exchange rates for your first day.</li></ul>'},
+      {color:'purple',title:'Rules and Laws',content:'<ul><li>Singapore has strict laws — fines for littering, jaywalking and chewing gum in public.</li><li>Drugs carry a mandatory death penalty — zero tolerance.</li><li>LGBTQ+ laws are complex — be aware of local context.</li><li>Everything is very safe and well-organised — follow signs and rules.</li></ul>'},
+      {color:'amber',title:'Food Guide',content:'<ul><li>Hawker centres are the best and safest places to eat — cheap, authentic, and hygienic.</li><li>Vegetarian Indian food is widely available — Little India has excellent options.</li><li>Try: Roti prata, laksa (veg available), char kway teow, chicken rice.</li><li>Tap water is completely safe to drink.</li></ul>'},
+      {color:'coral',title:'Things to Watch Out For',content:'<ul><li>Singapore is extremely safe — scams are rare but still exist online.</li><li><b>Taxi overcharging:</b> Always use Grab app — never negotiate with random taxis.</li><li>Be careful in Geylang area at night — it is red-light district with different environment.</li></ul>'},
+    ]
+  },
+  London:{
+    police:'999',
+    hospital:'University College Hospital London — +44 20 3456 7890',
+    embassy:'High Commission of India, London — +44 20 7836 8484',
+    embassySub:'India House, Aldwych, London WC2B 4NA',
+    hotelLocal:'Please take me to [hotel name]. Thank you.',
+    sosmsg:'I am an Indian tourist and I need help. Please call 999.',
+    cards:[
+      {color:'teal',title:'Currency & Money',content:'<ul><li>Currency: British Pound (GBP). 1 INR = approx 0.0094 GBP.</li><li>Cards accepted everywhere — contactless is standard.</li><li>Tipping: 10-15% in restaurants is appreciated but not mandatory.</li><li>Avoid currency exchange at airports — rates are very poor. Use ATMs in the city.</li></ul>'},
+      {color:'purple',title:'Getting Around',content:'<ul><li>Get an Oyster Card or use contactless card for all public transport.</li><li>The Tube (Underground) is the fastest way around the city.</li><li>Black cabs are official — or use Uber which is fully regulated.</li><li>Buses are cheap and give you great views of the city.</li></ul>'},
+      {color:'amber',title:'Food Guide',content:'<ul><li>London has excellent Indian restaurants — Southall and Brick Lane are famous Indian food areas.</li><li>Vegetarian and vegan options are extremely well labelled in all restaurants and supermarkets.</li><li>Supermarkets like Tesco and Sainsbury\'s are affordable for self-catering.</li><li>Tap water is completely safe to drink.</li></ul>'},
+      {color:'coral',title:'Stay Safe',content:'<ul><li><b>Phone snatching:</b> Do not use your phone while walking in busy areas — motorbike snatchers are active in some areas.</li><li><b>Fake police:</b> Real police will never ask for your wallet or phone. If approached, ask for badge number and call 999.</li><li>Keep your bag in front of you on the Tube, especially in tourist areas.</li></ul>'},
+    ]
+  }
+};
+
+const confLabels = {1:'Very Nervous',2:'A Bit Nervous',3:'Neutral',4:'Quite Confident',5:'Very Confident'};
+const chips = {};
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function selectChip(group, el, value){
+  document.querySelectorAll(`#${group}-chips .chip`).forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  chips[group] = value;
+  if(group==='purpose') state.purpose = value;
+  if(group==='food') state.food = value;
+  if(group==='first') state.first = value;
+}
+
+function updateConf(v){
+  state.conf = v;
+  document.getElementById('conf-label').textContent = confLabels[v]||'Neutral';
+}
+
+function generateBriefing(){
+  const dest = document.getElementById('dest').value;
+  const name = document.getElementById('uname').value.trim();
+  if(!dest){alert('Please select a destination first.');return;}
+  state.dest = dest;
+  state.name = name || 'Traveller';
+
+  const d = destData[dest];
+  if(!d){alert('Destination data not available.');return;}
+
+  document.getElementById('brief-dest').textContent = dest;
+  document.getElementById('brief-title').textContent = `${state.name}'s Safety Briefing`;
+  document.getElementById('brief-pill').textContent = `${state.food||'Solo'} | ${state.purpose||'Traveller'} | ${confLabels[state.conf]||''}`;
+  document.getElementById('emg-dest-label').textContent = `Emergency info for ${dest}`;
+  document.getElementById('emg-police').textContent = `Emergency: ${d.police}`;
+  document.getElementById('emg-hospital').textContent = d.hospital;
+  document.getElementById('emg-embassy').textContent = d.embassy;
+  document.getElementById('emg-embassy-sub').textContent = d.embassySub;
+  document.getElementById('emg-hotel').textContent = 'Show your hotel name here';
+  document.getElementById('emg-hotel-local').textContent = d.hotelLocal;
+  document.getElementById('sos-text').textContent = d.sosmsg;
+  document.getElementById('comp-sub').textContent = `How are you feeling in ${dest}?`;
+
+  go('briefing');
+
+  const area = document.getElementById('cards-area');
+  area.innerHTML = '<div class="loading-card"><div class="spinner"></div><div style="font-size:14px;color:#888">Building your personalised briefing...</div></div>';
+
+  setTimeout(()=>{
+    area.innerHTML = '';
+    const colorMap = {teal:'',purple:'purple',amber:'amber',coral:'coral',red:'red'};
+    d.cards.forEach(card=>{
+      const div = document.createElement('div');
+      div.className = `info-card ${colorMap[card.color]||''}`;
+      div.innerHTML = `<div class="card-title">${card.title}</div><div class="card-content">${card.content}</div>`;
+      area.appendChild(div);
+    });
+  }, 1400);
+}
+
+function setMood(el, mood, text){
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('mood-result-title').textContent = `You are feeling ${mood}`;
+  document.getElementById('mood-result-text').textContent = text;
+  document.getElementById('mood-result').classList.add('show');
+  document.getElementById('disrupt-result').classList.remove('show');
+}
+
+const disruptData = {
+  missed:{
+    title:'Transport cancelled — here is what to do',
+    text:'<ol><li>Stay calm and move away from the crowd to a quiet corner.</li><li>Open the official airline or train app and check for rebooking options first.</li><li>If no options — go to the customer service desk and ask for a refund or next available slot.</li><li>Screenshot all confirmation emails and receipts right now for insurance claims.</li><li>Contact your travel insurance helpline if the delay is more than 4 hours.</li><li>Find a safe, comfortable place to wait — hotel lobby or airport lounge.</li></ol>'
+  },
+  scam:{
+    title:'Think you were scammed — act now',
+    text:'<ol><li>Move to a safe, public area immediately. Do not confront anyone alone.</li><li>Note down everything — time, location, description of person, what happened.</li><li>If money was taken — contact your bank immediately to freeze your card.</li><li>Report to local tourist police — they handle traveller fraud specifically.</li><li>Keep all receipts and screenshots as evidence for insurance or embassy help.</li><li>Contact the Indian Embassy if you need official support or lost significant money.</li></ol>'
+  },
+  'lost-item':{
+    title:'Lost wallet or passport — do this immediately',
+    text:'<ol><li>Passport lost: Contact the Indian Embassy immediately — this is their most common request and they will help you fast.</li><li>Wallet lost: Call your bank immediately and block all cards. Most banks have a 24-hour international helpline.</li><li>File a police report — you will need this for insurance claims and a new passport.</li><li>Contact your family or a trusted person back home and let them know.</li><li>Ask your hotel for help — they deal with this regularly and know the process.</li><li>Keep a photo of your passport saved in Google Drive or email — it speeds up the replacement process.</li></ol>'
+  }
+};
+
+function showDisrupt(type){
+  const d = disruptData[type];
+  document.getElementById('disrupt-result-title').textContent = d.title;
+  document.getElementById('disrupt-result-text').innerHTML = d.text;
+  document.getElementById('disrupt-result').classList.add('show');
+  document.getElementById('mood-result').classList.remove('show');
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+}
+</script>
+</body>
+</html>
